@@ -320,6 +320,22 @@ const Surface_Of_Revolution = defs.Surface_Of_Revolution =
         }
     }
 
+const Surface_Of_Revolution_Curved = defs.Surface_Of_Revolution_Curved =
+    class Surface_Of_Revolution_Curved extends Grid_Patch {
+        // SURFACE OF REVOLUTION: Produce a curved "sheet" of triangles with rows and columns.
+        // Begin with an input array of points, defining a 1D path curving through 3D space --
+        // now let each such point be a row.  Sweep that whole curve around the Z axis in equal
+        // steps, stopping and storing new points along the way; let each step be a column. Now
+        // we have a flexible "generalized cylinder" spanning an area until total_curvature_angle.
+        constructor(rows, columns, points, texture_coord_range, total_curvature_angle = 2 * Math.PI, xaxis=0, yaxis=0, zaxis=1) {
+            const row_operation = i => Grid_Patch.sample_array(points, i),
+                column_operation = (j, p) => Mat4.rotation(total_curvature_angle / columns, xaxis, yaxis, zaxis).times(p.to4(1)).to3();
+
+            super(rows, columns, row_operation, column_operation, texture_coord_range);
+        }
+    }
+    
+
 
 const Regular_2D_Polygon = defs.Regular_2D_Polygon =
     class Regular_2D_Polygon extends Surface_Of_Revolution {
@@ -346,6 +362,24 @@ const Cone_Tip = defs.Cone_Tip =
             super(rows, columns, Vector3.cast([0, 0, 1], [1, 0, -1]), texture_range);
         }
     }
+
+const Trombone_Bell = defs.Trombone_Bell =
+    class Trombone_Bell extends Surface_Of_Revolution {
+        constructor(rows, columns, texture_range) {
+            super(rows, columns, Vector3.cast([0.3, 0, -10], [0.5, 0, -1.25], [1.25, 0, 1], [2, 0, 1.15], [3.2, 0, 1.5]), texture_range);
+        }
+    }
+
+const Curved_Tube = defs.Curved_Tube =  
+    class Curved_Tube extends Surface_Of_Revolution_Curved {
+        constructor(rows, columns, texture_range) {
+            let tubeVec = Vector3.cast([4,0,0], [3.85, .35, 0], [3.5,.5, 0], [3.35, .35, 0], [3, 0, 0], [3.35, -.35, 0], [3.5, -.5, 0], [3.85, -.35, 0 ], [4,0,0])
+            super(rows, columns, tubeVec, texture_range, Math.PI, 0, 1, 0);
+
+        }
+    }
+
+
 
 const Torus = defs.Torus =
     class Torus extends Shape {

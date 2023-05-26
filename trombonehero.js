@@ -20,6 +20,8 @@ export class TromboneHero extends Scene {
             moon: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version() )(1),
             sun: new defs.Subdivision_Sphere(4),
             circle: new defs.Regular_2D_Polygon(1, 15),
+            trombone_bell: new defs.Trombone_Bell(5, 10, [[0, 2], [0, 1]]),
+            curved_tube: new defs.Curved_Tube(7, 10, [[0, 2], [0, 1]]),
             // TODO:  Fill in as many additional shape instances as needed in this key/value table.
             //        (Requirement 1)
         };
@@ -105,52 +107,65 @@ export class TromboneHero extends Scene {
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.identity();
         
+        //let light_position = vec4(1,1,1,1);
+        //program_state.lights = [new Light(light_position, color(1,1,1,1))];
+
+  
+
         
 
         /* sun */
         let sun_scaling_r = (Math.sin(Math.PI * t / 4) + 2);
         let sun_scaling_c = Math.sin(Math.PI * t / 4);
 
-        let light_position = vec4(0, 0, 0, 1);
-        program_state.lights = [new Light(light_position, color(1, sun_scaling_c, sun_scaling_c, 1), 10**sun_scaling_r)]
+        let light_position = vec4(0, 1, 1, 1);
+        program_state.lights = [new Light(light_position, hex_color("#ffffff"), 1)]
 
-        let s_model_transform = model_transform.times(Mat4.scale(sun_scaling_r, sun_scaling_r, sun_scaling_r));
-        this.shapes.sun.draw(context, program_state, s_model_transform, this.materials.sun.override({color: color(1,sun_scaling_c,sun_scaling_c,1)}));
+        
 
-        /* planet 1 */
-        let p1_model_transform = model_transform.times(Mat4.rotation(t, 0, 0, 1))
-                                                .times(Mat4.translation(5, 0, 0));
-        this.shapes.planet1.draw(context, program_state, p1_model_transform, this.materials.planet1);
-        this.planet_1 = p1_model_transform;
+        this.shapes.trombone_bell.draw(context, program_state, model_transform, this.materials.test);
 
-        /* planet 2 */
-        let p2_model_transform = model_transform.times(Mat4.rotation(t * 3/4, 0, 0, 1))
-                                                .times(Mat4.translation(8, 0, 0));
-        this.shapes.planet2.draw(context, program_state, p2_model_transform, (t|0) % 2 ? this.materials.planet2gouraud : this.materials.planet2phong);
-        this.planet_2 = p2_model_transform;
+        let tube_transform = model_transform.times(Mat4.rotation(Math.PI / 2, 0, 0, 1))
+                                            .times(Mat4.translation(-2.5,0,-10))
+                                            .times(Mat4.scale(0.7, 0.7, 0.7));
+                                            
+        this.shapes.curved_tube.draw(context, program_state, tube_transform, this.materials.test);
 
-        /* planet 3 */
-        let p3_model_transform = model_transform.times(Mat4.rotation(t * 1/2, 0, 0, 1))
-                                                .times(Mat4.translation(11, 0, 0))
-                                                .times(Mat4.rotation(t * 3/4, 0.5, 0.5, .25));
-        this.shapes.planet3.draw(context, program_state, p3_model_transform, this.materials.planet3);                         
-        this.shapes.torus.draw(context, program_state, p3_model_transform.times(Mat4.scale(2.5, 2.5, 0.1)), this.materials.ring);
-        this.planet_3 = p3_model_transform;
 
-        /* planet 4 */
-        let p4_model_transform = model_transform.times(Mat4.rotation(t * 1/4, 0, 0, 1 ))
-                                                .times(Mat4.translation(14, 0, 0));
-        this.shapes.planet4.draw(context, program_state, p4_model_transform, this.materials.planet4);
-        this.planet_4 = p4_model_transform;
+        // /* planet 1 */
+        // let p1_model_transform = model_transform.times(Mat4.rotation(t, 0, 0, 1))
+        //                                         .times(Mat4.translation(5, 0, 0));
+        // this.shapes.planet1.draw(context, program_state, p1_model_transform, this.materials.planet1);
+        // this.planet_1 = p1_model_transform;
 
-        /* moon */
-        let moon_model_transform = model_transform.times(Mat4.rotation(t * 1/4, 0, 0, 1 ))
-                                                .times(Mat4.translation(14, 0, 0)) 
-                                                .times(Mat4.rotation(t, 0, 0, .5 ))
-                                                .times(Mat4.translation(2.5, 0, 0))
-                                                .times(Mat4.scale(0.5, 0.5, 0.5));
-        this.shapes.moon.draw(context, program_state, moon_model_transform, this.materials.moon);
-        this.moon = moon_model_transform;
+        // /* planet 2 */
+        // let p2_model_transform = model_transform.times(Mat4.rotation(t * 3/4, 0, 0, 1))
+        //                                         .times(Mat4.translation(8, 0, 0));
+        // this.shapes.planet2.draw(context, program_state, p2_model_transform, (t|0) % 2 ? this.materials.planet2gouraud : this.materials.planet2phong);
+        // this.planet_2 = p2_model_transform;
+
+        // /* planet 3 */
+        // let p3_model_transform = model_transform.times(Mat4.rotation(t * 1/2, 0, 0, 1))
+        //                                         .times(Mat4.translation(11, 0, 0))
+        //                                         .times(Mat4.rotation(t * 3/4, 0.5, 0.5, .25));
+        // this.shapes.planet3.draw(context, program_state, p3_model_transform, this.materials.planet3);                         
+        // this.shapes.torus.draw(context, program_state, p3_model_transform.times(Mat4.scale(2.5, 2.5, 0.1)), this.materials.ring);
+        // this.planet_3 = p3_model_transform;
+
+        // /* planet 4 */
+        // let p4_model_transform = model_transform.times(Mat4.rotation(t * 1/4, 0, 0, 1 ))
+        //                                         .times(Mat4.translation(14, 0, 0));
+        // this.shapes.planet4.draw(context, program_state, p4_model_transform, this.materials.planet4);
+        // this.planet_4 = p4_model_transform;
+
+        // /* moon */
+        // let moon_model_transform = model_transform.times(Mat4.rotation(t * 1/4, 0, 0, 1 ))
+        //                                         .times(Mat4.translation(14, 0, 0)) 
+        //                                         .times(Mat4.rotation(t, 0, 0, .5 ))
+        //                                         .times(Mat4.translation(2.5, 0, 0))
+        //                                         .times(Mat4.scale(0.5, 0.5, 0.5));
+        // this.shapes.moon.draw(context, program_state, moon_model_transform, this.materials.moon);
+        // this.moon = moon_model_transform;
 
     }  
 }
