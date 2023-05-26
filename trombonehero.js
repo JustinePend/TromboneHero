@@ -71,14 +71,14 @@ export class TromboneHero extends Scene {
     }
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("Attach to moon", [ "1" ], ()=> this.playnote("ordinario/Tbn-ord-C3-ff-N-T25d.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-C3-ff-N-T25d.wav"));
-        this.key_triggered_button("Attach to moon", [ "2" ], ()=> this.playnote("ordinario/Tbn-ord-D3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-D3-ff-N-N.wav"));
-        this.key_triggered_button("Attach to moon", [ "3" ], ()=> this.playnote("ordinario/Tbn-ord-E3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-E3-ff-N-N.wav"));
-        this.key_triggered_button("Attach to moon", [ "4" ], ()=> this.playnote("ordinario/Tbn-ord-F3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-F3-ff-N-N.wav"));
-        this.key_triggered_button("Attach to moon", [ "5" ], ()=> this.playnote("ordinario/Tbn-ord-G3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-G3-ff-N-N.wav"));
-        this.key_triggered_button("Attach to moon", [ "6" ], ()=> this.playnote("ordinario/Tbn-ord-A3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-A3-ff-N-N.wav"));
-        this.key_triggered_button("Attach to moon", [ "7"] , ()=> this.playnote("ordinario/Tbn-ord-B3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-B3-ff-N-N.wav"));
-        this.key_triggered_button("Attach to moon", [ "8" ], ()=> this.playnote("ordinario/Tbn-ord-C4-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-C4-ff-N-N.wav"));
+        this.key_triggered_button("Play C3", [ "1" ], ()=> this.playnote("ordinario/Tbn-ord-C3-ff-N-T25d.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-C3-ff-N-T25d.wav"));
+        this.key_triggered_button("Play D3", [ "2" ], ()=> this.playnote("ordinario/Tbn-ord-D3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-D3-ff-N-N.wav"));
+        this.key_triggered_button("Play E3", [ "3" ], ()=> this.playnote("ordinario/Tbn-ord-E3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-E3-ff-N-N.wav"));
+        this.key_triggered_button("Play F3", [ "4" ], ()=> this.playnote("ordinario/Tbn-ord-F3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-F3-ff-N-N.wav"));
+        this.key_triggered_button("Play G3", [ "5" ], ()=> this.playnote("ordinario/Tbn-ord-G3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-G3-ff-N-N.wav"));
+        this.key_triggered_button("Play A4", [ "6" ], ()=> this.playnote("ordinario/Tbn-ord-A3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-A3-ff-N-N.wav"));
+        this.key_triggered_button("Play B4", [ "7"] , ()=> this.playnote("ordinario/Tbn-ord-B3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-B3-ff-N-N.wav"));
+        this.key_triggered_button("Play C4", [ "8" ], ()=> this.playnote("ordinario/Tbn-ord-C4-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-C4-ff-N-N.wav"));
     }
 
 
