@@ -21,9 +21,9 @@ export class TromboneHero extends Scene {
             sun: new defs.Subdivision_Sphere(4),
             circle: new defs.Regular_2D_Polygon(1, 15),
             trombone_bell: new defs.Trombone_Bell(5, 10, [[0, 2], [0, 1]]),
-            curved_tube: new defs.Curved_Tube(7, 10, [[0, 2], [0, 1]]),
-            // TODO:  Fill in as many additional shape instances as needed in this key/value table.
-            //        (Requirement 1)
+            curved_tube: new defs.Curved_Tube(9, 15, [[0, 2], [0, 1]]),
+            tube: new defs.Cylindrical_Tube(2, 8, [[0, 2], [0, 1]]),
+            mouthpiece: new defs.Mouthpiece(5, 8, [[0, 2], [0, 1]]),
         };
 
         // *** Materials
@@ -46,12 +46,14 @@ export class TromboneHero extends Scene {
             planet4: new Material(new defs.Phong_Shader(), 
                 {ambient: 0, diffusivity: 0.6, specularity: .9, color: hex_color("#90cee4")}),
             moon: new Material(new defs.Phong_Shader(), 
-                {ambient: 0, diffusivity: 1, specularity: 1, color: hex_color("#ffffff")}),
+                {ambient: 0.2, diffusivity: 0.7, specularity: 1, color: hex_color("#ffffff")}),
+            brass: new Material(new defs.Phong_Shader(),
+                {ambient: .7, diffusivity: 0.5, specularity: 1, color: hex_color("#ebb23a")}),
             // TODO:  Fill in as many additional material objects as needed in this key/value table.
             //        (Requirement 4)
         }
 
-        this.initial_camera_location = Mat4.look_at(vec3(0, 10, 20), vec3(0, 0, 0), vec3(0, 1, 0));
+        this.initial_camera_location = Mat4.look_at(vec3(0, 10, 30), vec3(0, 0, 0), vec3(0, 1, 0));
         this.note;
         this.currNote;
     }
@@ -135,21 +137,61 @@ export class TromboneHero extends Scene {
         let sun_scaling_r = (Math.sin(Math.PI * t / 4) + 2);
         let sun_scaling_c = Math.sin(Math.PI * t / 4);
 
-        let light_position = vec4(0, 1, 1, 1);
-        program_state.lights = [new Light(light_position, hex_color("#ffffff"), 1)]
+        let light_position = vec4(0, 0, 2, 1);
+        program_state.lights = [new Light(light_position, hex_color("#ffffff"), 10)];
+     
+         
+        //MAIN BODY//
+        let light_test = model_transform.times(Mat4.translation(0, 0, 2));
+        //this.shapes.moon.draw(context, program_state, light_test, this.materials.test);
+
+        this.shapes.trombone_bell.draw(context, program_state, model_transform, this.materials.brass);
+
+        let curved_tube1_transform = model_transform.times(Mat4.rotation(Math.PI / 2, 0, 0, 1))
+                                            .times(Mat4.translation(-2.5,0,-12))
+                                            .times(Mat4.scale(0.7, 0.7, 0.7));
+                                            
+        this.shapes.curved_tube.draw(context, program_state, curved_tube1_transform, this.materials.brass);
+
+        let tube1_transform = model_transform.times(Mat4.translation(0, -5, -7.5))
+                                            .times(Mat4.scale(0.3, 0.3, 9));
+        this.shapes.tube.draw(context, program_state, tube1_transform, this.materials.brass);
+
+        //INNER TUBES//
+
+        let inner_tube2_transform = model_transform.times(Mat4.translation(0, -5, 4))
+                                                    .times(Mat4.scale(0.2, 0.22, 14.5));
+        this.shapes.tube.draw(context, program_state, inner_tube2_transform, this.materials.test);
+
+        let inner_tube3_transform = model_transform.times(Mat4.translation(-3.9, -5, 4))
+                                            .times(Mat4.scale(0.2, 0.2, 14.5));
+        this.shapes.tube.draw(context, program_state, inner_tube3_transform, this.materials.test);
+
+        let mouthpiece_transform = model_transform.times(Mat4.rotation(Math.PI, 1, 0, 0))
+                                                     .times(Mat4.translation(-3.9, 5, 4));
+        this.shapes.mouthpiece.draw(context, program_state, mouthpiece_transform, this.materials.test);
+
+
+
+        let translate = 5 * Math.sin(Math.PI * t / 4) + 5;
+        //MOVING//
+        let tube2_transform = model_transform.times(Mat4.translation(0, -5, 4 + translate))
+                                            .times(Mat4.scale(0.24, 0.24, 14.5));
+        this.shapes.tube.draw(context, program_state, tube2_transform, this.materials.brass);
+
+        
+        let curved_tube2_transform = model_transform.times(Mat4.rotation(Math.PI, 1, 0, 0))
+                                            .times(Mat4.translation(-1.95,5,-11 - translate))
+                                            .times(Mat4.scale(0.55, 0.55, 0.6));
+        this.shapes.curved_tube.draw(context, program_state, curved_tube2_transform, this.materials.brass);
+
+        let tube3_transform = model_transform.times(Mat4.translation(-3.9, -5, 4 + translate))
+                                            .times(Mat4.scale(0.24, 0.24, 14.5));
+        this.shapes.tube.draw(context, program_state, tube3_transform, this.materials.brass);
 
         
 
-        this.shapes.trombone_bell.draw(context, program_state, model_transform, this.materials.test);
-
-        let tube_transform = model_transform.times(Mat4.rotation(Math.PI / 2, 0, 0, 1))
-                                            .times(Mat4.translation(-2.5,0,-10))
-                                            .times(Mat4.scale(0.7, 0.7, 0.7));
-                                            
-        this.shapes.curved_tube.draw(context, program_state, tube_transform, this.materials.test);
-
-
-        // /* planet 1 */
+                                            // /* planet 1 */
         // let p1_model_transform = model_transform.times(Mat4.rotation(t, 0, 0, 1))
         //                                         .times(Mat4.translation(5, 0, 0));
         // this.shapes.planet1.draw(context, program_state, p1_model_transform, this.materials.planet1);

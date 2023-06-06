@@ -366,7 +366,14 @@ const Cone_Tip = defs.Cone_Tip =
 const Trombone_Bell = defs.Trombone_Bell =
     class Trombone_Bell extends Surface_Of_Revolution {
         constructor(rows, columns, texture_range) {
-            super(rows, columns, Vector3.cast([0.3, 0, -10], [0.5, 0, -1.25], [1.25, 0, 1], [2, 0, 1.15], [3.2, 0, 1.5]), texture_range);
+            super(rows, columns, Vector3.cast([0.3, 0, -12], [0.5, 0, -1.25], [1.25, 0, 1], [2, 0, 1.15], [3.2, 0, 1.5]), texture_range);
+        }
+    }
+
+const Mouthpiece = defs.Mouthpiece =
+    class Mouthpiece extends Surface_Of_Revolution {
+        constructor(rows, columns, texture_range) {
+            super(rows, columns, Vector3.cast([0.2, 0, -1], [0.3, 0, 0], [0.5, 0, 0.3], [0.5, 0, 0.7], [0, 0, 0.7]))
         }
     }
 
