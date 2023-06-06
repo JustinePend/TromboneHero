@@ -132,7 +132,7 @@ export class TromboneHero extends Scene {
             if(this.attached() != null) {
                 attached_cam = Mat4.inverse(this.attached().times(Mat4.translation(0, 0, 5)));
             }
-            
+            //a
             let blending_factor = 0.1;
             let blended_cam = attached_cam.map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, blending_factor));
             program_state.set_camera(blended_cam);
