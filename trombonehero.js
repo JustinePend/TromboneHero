@@ -6,6 +6,7 @@ const {
 function Note(pitch, time) {
     this.noteNum = pitch;
     this.playTime = time;
+    
   }
 export class TromboneHero extends Scene {
     constructor() {
@@ -148,6 +149,8 @@ export class TromboneHero extends Scene {
                                             .times(Mat4.scale(0.7, 0.7, 0.7));
                                             
         this.shapes.curved_tube.draw(context, program_state, tube_transform, this.materials.test);
+
+
         if(this.shouldStart&&this.startTime==-1){
             this.startTime=t;
             
