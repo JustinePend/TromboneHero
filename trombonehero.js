@@ -6,7 +6,7 @@ const {
 function Note(pitch, time) {
     this.noteNum = pitch;
     this.playTime = time;
-    
+    this.currColor="none";
   }
 export class TromboneHero extends Scene {
     constructor() {
@@ -15,6 +15,7 @@ export class TromboneHero extends Scene {
         
         // At the beginning of our program, load one of each of these shape definitions onto the GPU.
         this.shapes = {
+            finishLine: new defs.Square(),
             noteBlock: new defs.Square(),
             torus: new defs.Torus(15, 15),
             torus2: new defs.Torus(3, 15),
@@ -106,13 +107,25 @@ export class TromboneHero extends Scene {
         let time = t-this.startTime;
         for(let i=0;i<this.currSong.length;i++){
 
-            if(time-this.currSong[i].playTime<2.5&&time-this.currSong[i].playTime>0){
+            if(time-this.currSong[i].playTime<3&&time-this.currSong[i].playTime>0){
                 let note_transform = Mat4.identity();
                 note_transform=note_transform
-                .times(Mat4.translation(20-5*(time-this.currSong[i].playTime),this.currSong[i].noteNum-3,0))
+                .times(Mat4.translation(22.5-5*(time-this.currSong[i].playTime),this.currSong[i].noteNum-3,0))
                 .times(Mat4.scale(0.5, 0.5, 0.5));
-                this.shapes.noteBlock.draw(context, program_state, note_transform, this.materials.test);
-            }else if(i==this.currSong.length-1&&time-this.currSong[i].playTime>2.5){
+                if(this.currSong[i].color=="green"){
+                    this.shapes.noteBlock.draw(context, program_state, note_transform, this.materials.test.override({color:color(0,1,0,1)}));
+                }else if(this.currSong[i].color=="red"){
+                    this.shapes.noteBlock.draw(context, program_state, note_transform, this.materials.test.override({color:color(1,0,0,1)}));
+                }else if(time-this.currSong[i].playTime>2 && time-this.currSong[i].playTime<2.2 && this.currSong[i].noteNum==this.noteNum){
+                    this.shapes.noteBlock.draw(context, program_state, note_transform, this.materials.test.override({color:color(0,1,0,1)}));
+                    this.currSong[i].color="green";
+                }else if(time-this.currSong[i].playTime>2.2){
+                    this.shapes.noteBlock.draw(context, program_state, note_transform, this.materials.test.override({color:color(1,0,0,1)}));
+                    this.currSong[i].color="red";
+                }else{
+                    this.shapes.noteBlock.draw(context, program_state, note_transform, this.materials.test.override({color:color(1,1,1,1)}));
+                }
+            }else if(i==this.currSong.length-1&&time-this.currSong[i].playTime>3){
                 console.log("finished song");
                 this.startTime=-1;
                 this.shouldStart=false;
@@ -211,6 +224,9 @@ export class TromboneHero extends Scene {
         if(this.startTime!=-1){
             this.draw_cubes(t, context, program_state);
         }
+        let line_trans= Mat4.identity();
+        line_trans=line_trans.times(Mat4.translation(12,0,.1)).times(Mat4.scale(0.3, 20, .3));
+        this.shapes.finishLine.draw(context,program_state,line_trans,this.materials.test.override({color: color(0,1,1,1)}));
     }  
 }
 
