@@ -3,7 +3,11 @@ import {defs, tiny} from './examples/common.js';
 const {
     Vector, Vector3, vec, vec3, vec4, color, hex_color, Shader, Matrix, Mat4, Light, Shape, Material, Scene,
 } = tiny;
-
+function Note(pitch, time) {
+    this.noteNum = pitch;
+    this.playTime = time;
+    
+  }
 export class TromboneHero extends Scene {
     constructor() {
         // constructor(): Scenes begin by populating initial values like the Shapes and Materials they'll need.
@@ -11,6 +15,7 @@ export class TromboneHero extends Scene {
         
         // At the beginning of our program, load one of each of these shape definitions onto the GPU.
         this.shapes = {
+            noteBlock: new defs.Square(),
             torus: new defs.Torus(15, 15),
             torus2: new defs.Torus(3, 15),
             planet1: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version() )(2),
@@ -53,16 +58,21 @@ export class TromboneHero extends Scene {
             //        (Requirement 4)
         }
 
-        this.initial_camera_location = Mat4.look_at(vec3(0, 10, 30), vec3(0, 0, 0), vec3(0, 1, 0));
+        this.initial_camera_location = Mat4.look_at(vec3(10, 10, 30), vec3(10, 0, 0), vec3(0, 1, 0));
+        this.currSong=[new Note(3,0),new Note(2,0.5),new Note(1,1),new Note(2,1.5),new Note(3,2),new Note(3,2.5),new Note(3,3),new Note(2,4),new Note(2,4.5),new Note(2,5),new Note(3,6),new Note(3,6.5),new Note(3,7),new Note(3,8),new Note(2,8.5),new Note(1,9),new Note(2,9.5),new Note(3,10),new Note(3,10.5),new Note(3,11),new Note(3,11.5),new Note(2,12),new Note(2,12.5),new Note(3,13),new Note(2,13.5),new Note(1,14)];
+        this.indexInSong=-1;
         this.note;
         this.currNote;
+        this.noteNum;
+        this.startTime=-1;
+        this.shouldStart=false;
     }
-    
-    playnote(path){
+    playnote(path, num){
         if(this.note==null){
             this.note= new Audio(path);
             this.note.play();
             this.currNote=path;
+            this.noteNum=num;
         }
     }
     stopnote(path){
@@ -71,38 +81,53 @@ export class TromboneHero extends Scene {
             this.note.pause();
             this.note=null;
             this.currNote=null;
+            this.noteNum=-1;
         }
+    }
+    startSong(songName){
+        this.shouldStart=true;
+        this.indexInSong=0;
+        console.log('start button hit');
     }
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
-        this.key_triggered_button("Play C3", [ "1" ], ()=> this.playnote("ordinario/Tbn-ord-C3-ff-N-T25d.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-C3-ff-N-T25d.wav"));
-        this.key_triggered_button("Play D3", [ "2" ], ()=> this.playnote("ordinario/Tbn-ord-D3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-D3-ff-N-N.wav"));
-        this.key_triggered_button("Play E3", [ "3" ], ()=> this.playnote("ordinario/Tbn-ord-E3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-E3-ff-N-N.wav"));
-        this.key_triggered_button("Play F3", [ "4" ], ()=> this.playnote("ordinario/Tbn-ord-F3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-F3-ff-N-N.wav"));
-        this.key_triggered_button("Play G3", [ "5" ], ()=> this.playnote("ordinario/Tbn-ord-G3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-G3-ff-N-N.wav"));
-        this.key_triggered_button("Play A4", [ "6" ], ()=> this.playnote("ordinario/Tbn-ord-A3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-A3-ff-N-N.wav"));
-        this.key_triggered_button("Play B4", [ "7"] , ()=> this.playnote("ordinario/Tbn-ord-B3-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-B3-ff-N-N.wav"));
-        this.key_triggered_button("Play C4", [ "8" ], ()=> this.playnote("ordinario/Tbn-ord-C4-ff-N-N.wav"), undefined,() => this.stopnote("ordinario/Tbn-ord-C4-ff-N-N.wav"));
+        this.key_triggered_button("Play C3", [ "1" ], ()=> this.playnote("ordinario/Tbn-ord-C3-ff-N-T25d.wav",1),undefined,()=> this.stopnote("ordinario/Tbn-ord-C3-ff-N-T25d.wav"));
+        this.key_triggered_button("Play D3", [ "2" ], ()=> this.playnote("ordinario/Tbn-ord-D3-ff-N-N.wav",2), undefined,() => this.stopnote("ordinario/Tbn-ord-D3-ff-N-N.wav"));
+        this.key_triggered_button("Play E3", [ "3" ], ()=> this.playnote("ordinario/Tbn-ord-E3-ff-N-N.wav",3), undefined,() => this.stopnote("ordinario/Tbn-ord-E3-ff-N-N.wav"));
+        this.key_triggered_button("Play F3", [ "4" ], ()=> this.playnote("ordinario/Tbn-ord-F3-ff-N-N.wav",4), undefined,() => this.stopnote("ordinario/Tbn-ord-F3-ff-N-N.wav"));
+        this.key_triggered_button("Play G3", [ "5" ], ()=> this.playnote("ordinario/Tbn-ord-G3-ff-N-N.wav",5), undefined,() => this.stopnote("ordinario/Tbn-ord-G3-ff-N-N.wav"));
+        this.key_triggered_button("Play A4", [ "6" ], ()=> this.playnote("ordinario/Tbn-ord-A3-ff-N-N.wav",6), undefined,() => this.stopnote("ordinario/Tbn-ord-A3-ff-N-N.wav"));
+        this.key_triggered_button("Play B4", [ "7" ], ()=> this.playnote("ordinario/Tbn-ord-B3-ff-N-N.wav",7), undefined,() => this.stopnote("ordinario/Tbn-ord-B3-ff-N-N.wav"));
+        this.key_triggered_button("Play C4", [ "8" ], ()=> this.playnote("ordinario/Tbn-ord-C4-ff-N-N.wav",8), undefined,() => this.stopnote("ordinario/Tbn-ord-C4-ff-N-N.wav"));
+        this.key_triggered_button("Start Song 1", [ "q" ], ()=> this.startSong("song1"));
+
+    }
+    draw_cubes(t, context, program_state){
+        let time = t-this.startTime;
+        for(let i=0;i<this.currSong.length;i++){
+
+            if(time-this.currSong[i].playTime<2.5&&time-this.currSong[i].playTime>0){
+                let note_transform = Mat4.identity();
+                note_transform=note_transform
+                .times(Mat4.translation(20-5*(time-this.currSong[i].playTime),this.currSong[i].noteNum-3,0))
+                .times(Mat4.scale(0.5, 0.5, 0.5));
+                this.shapes.noteBlock.draw(context, program_state, note_transform, this.materials.test);
+            }else if(i==this.currSong.length-1&&time-this.currSong[i].playTime>2.5){
+                console.log("finished song");
+                this.startTime=-1;
+                this.shouldStart=false;
+            }
+        }
     }
 
-
     display(context, program_state) {
-        // display():  Called once per frame of animation.
-        // Setup -- This part sets up the scene's overall camera matrix, projection matrix, and lights:
         if (!context.scratchpad.controls) {
             this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
             // Define the global camera and projection matrices, which are stored in program_state.
             program_state.set_camera(this.initial_camera_location);
         }
-
         program_state.projection_transform = Mat4.perspective(
             Math.PI / 4, context.width / context.height, .1, 1000);
-
-        // TODO: Create Planets (Requirement 1)
-        // this.shapes.[XXX].draw([XXX]) // <--example
-        
-        // TODO: Lighting (Requirement 2)
-        // The parameters of the Light are: position, color, size
 
         if(this.attached) {
             let attached_cam = Mat4.translation(0,0,-22.36);
@@ -110,28 +135,17 @@ export class TromboneHero extends Scene {
             if(this.attached() != null) {
                 attached_cam = Mat4.inverse(this.attached().times(Mat4.translation(0, 0, 5)));
             }
-            
+            //a
             let blending_factor = 0.1;
             let blended_cam = attached_cam.map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, blending_factor));
             program_state.set_camera(blended_cam);
         }
-        
-
-    //    if(this.attached) {
-    //     
-    //    } 
-     
-
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 3 and 4)
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
         let model_transform = Mat4.identity();
         
         //let light_position = vec4(1,1,1,1);
         //program_state.lights = [new Light(light_position, color(1,1,1,1))];
-
-  
-
-        
 
         /* sun */
         let sun_scaling_r = (Math.sin(Math.PI * t / 4) + 2);
@@ -189,43 +203,14 @@ export class TromboneHero extends Scene {
                                             .times(Mat4.scale(0.24, 0.24, 14.5));
         this.shapes.tube.draw(context, program_state, tube3_transform, this.materials.brass);
 
-        
 
-                                            // /* planet 1 */
-        // let p1_model_transform = model_transform.times(Mat4.rotation(t, 0, 0, 1))
-        //                                         .times(Mat4.translation(5, 0, 0));
-        // this.shapes.planet1.draw(context, program_state, p1_model_transform, this.materials.planet1);
-        // this.planet_1 = p1_model_transform;
-
-        // /* planet 2 */
-        // let p2_model_transform = model_transform.times(Mat4.rotation(t * 3/4, 0, 0, 1))
-        //                                         .times(Mat4.translation(8, 0, 0));
-        // this.shapes.planet2.draw(context, program_state, p2_model_transform, (t|0) % 2 ? this.materials.planet2gouraud : this.materials.planet2phong);
-        // this.planet_2 = p2_model_transform;
-
-        // /* planet 3 */
-        // let p3_model_transform = model_transform.times(Mat4.rotation(t * 1/2, 0, 0, 1))
-        //                                         .times(Mat4.translation(11, 0, 0))
-        //                                         .times(Mat4.rotation(t * 3/4, 0.5, 0.5, .25));
-        // this.shapes.planet3.draw(context, program_state, p3_model_transform, this.materials.planet3);                         
-        // this.shapes.torus.draw(context, program_state, p3_model_transform.times(Mat4.scale(2.5, 2.5, 0.1)), this.materials.ring);
-        // this.planet_3 = p3_model_transform;
-
-        // /* planet 4 */
-        // let p4_model_transform = model_transform.times(Mat4.rotation(t * 1/4, 0, 0, 1 ))
-        //                                         .times(Mat4.translation(14, 0, 0));
-        // this.shapes.planet4.draw(context, program_state, p4_model_transform, this.materials.planet4);
-        // this.planet_4 = p4_model_transform;
-
-        // /* moon */
-        // let moon_model_transform = model_transform.times(Mat4.rotation(t * 1/4, 0, 0, 1 ))
-        //                                         .times(Mat4.translation(14, 0, 0)) 
-        //                                         .times(Mat4.rotation(t, 0, 0, .5 ))
-        //                                         .times(Mat4.translation(2.5, 0, 0))
-        //                                         .times(Mat4.scale(0.5, 0.5, 0.5));
-        // this.shapes.moon.draw(context, program_state, moon_model_transform, this.materials.moon);
-        // this.moon = moon_model_transform;
-
+        if(this.shouldStart&&this.startTime==-1){
+            this.startTime=t;
+            
+        }
+        if(this.startTime!=-1){
+            this.draw_cubes(t, context, program_state);
+        }
     }  
 }
 
