@@ -60,7 +60,8 @@ export class TromboneHero extends Scene {
         }
 
         this.initial_camera_location = Mat4.look_at(vec3(10, 10, 30), vec3(10, 0, 0), vec3(0, 1, 0));
-        this.currSong=[new Note(3,0),new Note(2,0.5),new Note(1,1),new Note(2,1.5),new Note(3,2),new Note(3,2.5),new Note(3,3),new Note(2,4),new Note(2,4.5),new Note(2,5),new Note(3,6),new Note(3,6.5),new Note(3,7),new Note(3,8),new Note(2,8.5),new Note(1,9),new Note(2,9.5),new Note(3,10),new Note(3,10.5),new Note(3,11),new Note(3,11.5),new Note(2,12),new Note(2,12.5),new Note(3,13),new Note(2,13.5),new Note(1,14)];
+        this.currSong;
+        this.mary1= [new Note(3,0),new Note(2,0.5),new Note(1,1),new Note(2,1.5),new Note(3,2),new Note(3,2.5),new Note(3,3),new Note(2,4),new Note(2,4.5),new Note(2,5),new Note(3,6),new Note(3,6.5),new Note(3,7),new Note(3,8),new Note(2,8.5),new Note(1,9),new Note(2,9.5),new Note(3,10),new Note(3,10.5),new Note(3,11),new Note(3,11.5),new Note(2,12),new Note(2,12.5),new Note(3,13),new Note(2,13.5),new Note(1,14)];
         this.indexInSong=-1;
         this.note;
         this.currNote;
@@ -89,6 +90,20 @@ export class TromboneHero extends Scene {
         this.shouldStart=true;
         this.indexInSong=0;
         console.log('start button hit');
+        switch (songName) {
+            case 1:
+                this.currSong=this.mary1;
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                break;
+        }
+        for(let i=0;i<this.currSong.length;i++){
+            this.currSong[i].color="none";
+        }
     }
     make_control_panel() {
         // Draw the scene's buttons, setup their actions and keyboard shortcuts, and monitor live measurements.
@@ -100,7 +115,7 @@ export class TromboneHero extends Scene {
         this.key_triggered_button("Play A4", [ "6" ], ()=> this.playnote("ordinario/Tbn-ord-A3-ff-N-N.wav",6), undefined,() => this.stopnote("ordinario/Tbn-ord-A3-ff-N-N.wav"));
         this.key_triggered_button("Play B4", [ "7" ], ()=> this.playnote("ordinario/Tbn-ord-B3-ff-N-N.wav",7), undefined,() => this.stopnote("ordinario/Tbn-ord-B3-ff-N-N.wav"));
         this.key_triggered_button("Play C4", [ "8" ], ()=> this.playnote("ordinario/Tbn-ord-C4-ff-N-N.wav",8), undefined,() => this.stopnote("ordinario/Tbn-ord-C4-ff-N-N.wav"));
-        this.key_triggered_button("Start Song 1", [ "q" ], ()=> this.startSong("song1"));
+        this.key_triggered_button("Start Song 1", [ "q" ], ()=> this.startSong(1));
 
     }
     draw_cubes(t, context, program_state){
