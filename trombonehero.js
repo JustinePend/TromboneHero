@@ -17,6 +17,7 @@ export class TromboneHero extends Scene {
         this.shapes = {
             finishLine: new defs.Square(),
             noteBlock: new defs.Square(),
+            guideLines: new defs.Square(),
             torus: new defs.Torus(15, 15),
             torus2: new defs.Torus(3, 15),
             planet1: new (defs.Subdivision_Sphere.prototype.make_flat_shaded_version() )(2),
@@ -154,7 +155,7 @@ export class TromboneHero extends Scene {
 
     display(context, program_state) {
         if (!context.scratchpad.controls) {
-            this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
+            //this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
             // Define the global camera and projection matrices, which are stored in program_state.
             program_state.set_camera(this.initial_camera_location);
         }
@@ -252,6 +253,16 @@ export class TromboneHero extends Scene {
         let line_trans= Mat4.identity();
         line_trans=line_trans.times(Mat4.translation(12,0,.1)).times(Mat4.scale(0.3, 20, .3));
         this.shapes.finishLine.draw(context,program_state,line_trans,this.materials.test.override({color: color(0,1,1,1)}));
+        let guide_trans=Mat4.identity();
+        guide_trans=guide_trans.times(Mat4.scale(5.2,.1,.1)).times(Mat4.translation(3.35,0,-.1));
+        this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,-20,0)),this.materials.test.override({color: color(0,1,1,1)}));
+        this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,-10,0)),this.materials.test.override({color: color(0,1,1,1)}));
+        this.shapes.guideLines.draw(context,program_state,guide_trans,this.materials.test.override({color: color(0,1,1,1)}));
+        this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,10,0)),this.materials.test.override({color: color(0,1,1,1)}));
+        this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,20,0)),this.materials.test.override({color: color(0,1,1,1)}));
+        this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,30,0)),this.materials.test.override({color: color(0,1,1,1)}));
+        this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,40,0)),this.materials.test.override({color: color(0,1,1,1)}));
+        this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,50,0)),this.materials.test.override({color: color(0,1,1,1)}));
     }  
 }
 
