@@ -71,15 +71,15 @@ const Canvas_Widget = widgets.Canvas_Widget =
             const primary_scene = initial_scenes ? initial_scenes[0] : undefined;
             const additional_scenes = initial_scenes ? initial_scenes.slice(1) : [];
             const primary_scene_definiton = primary_scene ? primary_scene.constructor : undefined;
-            if (this.show_explanation)
-                this.embedded_explanation = new Text_Widget(this.embedded_explanation_area, this.webgl_manager.scenes, this.webgl_manager);
+            // if (this.show_explanation)
+            //     this.embedded_explanation = new Text_Widget(this.embedded_explanation_area, this.webgl_manager.scenes, this.webgl_manager);
             if (this.make_controls)
                 this.embedded_controls = new Controls_Widget(this.embedded_controls_area, this.webgl_manager.scenes);
-            if (this.make_editor)
-                this.embedded_editor = new Editor_Widget(this.embedded_editor_area, primary_scene_definiton, this);
-            if (this.make_code_nav)
-                this.embedded_code_nav = new Code_Widget(this.embedded_code_nav_area, primary_scene_definiton,
-                    additional_scenes, {associated_editor: this.embedded_editor});
+            // if (this.make_editor)
+            //     this.embedded_editor = new Editor_Widget(this.embedded_editor_area, primary_scene_definiton, this);
+            // if (this.make_code_nav)
+            //     this.embedded_code_nav = new Code_Widget(this.embedded_code_nav_area, primary_scene_definiton,
+            //         additional_scenes, {associated_editor: this.embedded_editor});
 
             // Start WebGL initialization.  Note that render() will re-queue itself for continuous calls.
             this.webgl_manager.render();
