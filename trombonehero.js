@@ -73,6 +73,10 @@ export class TromboneHero extends Scene {
         this.setpoint = 0;
         this.error = 0;
         this.lastNote = 1;
+
+        this.pitch = 0;
+        this.pitcherror = 0;
+        this.pitchsetpoint = 0;
     }
     playnote(path, num){
         if(this.note==null){
@@ -175,12 +179,27 @@ export class TromboneHero extends Scene {
         }
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 3 and 4)
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
-        let model_transform = Mat4.identity().times(Mat4.rotation(Math.PI / 4, 0, 1, 0))
-                                            .times(Mat4.scale(0.75, 0.75, 0.75));
+
+        this.lastNote = (this.noteNum != 0)? this.noteNum : this.lastNote;
+
+        this.setpoint = (this.lastNote - 1)* 1.9;
+        this.error = this.setpoint - this.position;
+        
+        this.position = this.position + 10.0 * this.error * dt;
+
+        this.pitchsetpoint = (this.noteNum - 1) * - 0.05;
+        this.pitcherror = this.pitchsetpoint - this.pitch;
+        this.pitch = this.pitch + 5 * this.pitcherror * dt;
+
+        let dance = Math.sin(2 * Math.PI * t);
+        let model_transform = Mat4.identity().times(Mat4.translation(0, (dance / (0.5 * this.lastNote)) * this.pitch * 5, -10 + this.pitch * 10))
+                                            .times(Mat4.rotation(Math.PI / 4, -dance/45, 1, 0))
+                                            .times(Mat4.rotation(this.pitch, 1, 0.7, 1))
+                                            .times(Mat4.scale(1, 1, 1));
     
         
      
-        let light_position = vec4(0, 0, 2, 1);
+        let light_position = vec4(0, 0, -9, 1);
         program_state.lights = [new Light(light_position, hex_color("#ffffff"), 10)];
      
          
@@ -212,14 +231,6 @@ export class TromboneHero extends Scene {
         let mouthpiece_transform = model_transform.times(Mat4.rotation(Math.PI, 1, 0, 0))
                                                      .times(Mat4.translation(-3.9, 5, 4));
         this.shapes.mouthpiece.draw(context, program_state, mouthpiece_transform, this.materials.test);
-
-        //* 5 * Math.sin(Math.PI * t / 4) + 5;
-
-        this.lastNote = (this.noteNum != 0)? this.noteNum : this.lastNote;
-        this.setpoint = (this.lastNote - 1)* 1.9;
-        this.error = this.setpoint - this.position;
-        
-        this.position = this.position + 10.0 * this.error * dt;
 
 
         //MOVING//2
