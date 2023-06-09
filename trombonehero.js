@@ -63,6 +63,31 @@ export class TromboneHero extends Scene {
         this.initial_camera_location = Mat4.look_at(vec3(10, 1, 20), vec3(10, 0, 0), vec3(0, 1, 0));
         this.currSong;
         this.mary1= [new Note(3,0),new Note(2,0.5),new Note(1,1),new Note(2,1.5),new Note(3,2),new Note(3,2.5),new Note(3,3),new Note(2,4),new Note(2,4.5),new Note(2,5),new Note(3,6),new Note(3,6.5),new Note(3,7),new Note(3,8),new Note(2,8.5),new Note(1,9),new Note(2,9.5),new Note(3,10),new Note(3,10.5),new Note(3,11),new Note(3,11.5),new Note(2,12),new Note(2,12.5),new Note(3,13),new Note(2,13.5),new Note(1,14)];
+        this.jingle1=[new Note(3,0),new Note(3,0.5),new Note(3,1),new Note(3,2),new Note(3,2.5),new Note(3,3),new Note(3,4),new Note(5,4.5),new Note(1,5),new Note(2,5.5),new Note(3,6),new Note(4,7),new Note(4,7.5),new Note(4,8),new Note(4,8.5),new Note(4,9),new Note(3,9.5),new Note(3,10),new Note(3,10.5),new Note(3,11),new Note(2,11.5),new Note(2,12),new Note(3,12.5),new Note(2,13),new Note(5,14)];
+        this.row1= [new Note(1, 0),
+            new Note(1, 0.75 * (4/3)),
+            new Note(1, 1.5 * (4/3)),
+            new Note(2, 2 * (4/3)),
+            new Note(3, 2.25 * (4/3)),
+            new Note(3, 3 * (4/3)),
+            new Note(2, 3.5 * (4/3)),
+            new Note(3, 3.75 * (4/3)),
+            new Note(4, 4.5 * (4/3)),
+            new Note(5, 4.75 * (4/3)),
+            new Note(8, 6.25 * (4/3)),
+            new Note(8, 6.75 * (4/3)),
+            new Note(5, 7 * (4/3)),
+            new Note(5, 7.5 * (4/3)),
+            new Note(3, 7.75 * (4/3)),
+            new Note(3, 8.25 * (4/3)),
+            new Note(1, 8.5 * (4/3)),
+            new Note(1, 9 * (4/3)),
+            new Note(5, 9.25 * (4/3)),
+            new Note(4, 9.75 * (4/3)),
+            new Note(3, 10 * (4/3)),
+            new Note(2, 10.5 * (4/3)),
+            new Note(1, 10.75 * (4/3))
+          ];
         this.indexInSong=-1;
         this.note;
         this.currNote;
@@ -96,6 +121,9 @@ export class TromboneHero extends Scene {
         }
     }
     startSong(songName){
+        if(this.shouldStart==true){
+            return;
+        }
         this.shouldStart=true;
         this.indexInSong=0;
         console.log('start button hit');
@@ -104,8 +132,10 @@ export class TromboneHero extends Scene {
                 this.currSong=this.mary1;
                 break;
             case 2:
+                this.currSong=this.jingle1;
                 break;
             case 3:
+                this.currSong=this.row1;
                 break;
             default:
                 break;
@@ -125,6 +155,8 @@ export class TromboneHero extends Scene {
         this.key_triggered_button("Play B4", [ "7" ], ()=> this.playnote("ordinario/Tbn-ord-B3-ff-N-N.wav",7), undefined,() => this.stopnote("ordinario/Tbn-ord-B3-ff-N-N.wav"));
         this.key_triggered_button("Play C4", [ "8" ], ()=> this.playnote("ordinario/Tbn-ord-C4-ff-N-N.wav",8), undefined,() => this.stopnote("ordinario/Tbn-ord-C4-ff-N-N.wav"));
         this.key_triggered_button("Play Mary Had a Little Lamb", [ "q" ], ()=> this.startSong(1));
+        this.key_triggered_button("Play Mary Had a Little Lamb", [ "w" ], ()=> this.startSong(2));
+        this.key_triggered_button("Play Mary Had a Little Lamb", [ "e" ], ()=> this.startSong(3))
 
     }
     draw_cubes(t, context, program_state){
