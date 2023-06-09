@@ -65,7 +65,7 @@ export class TromboneHero extends Scene {
         this.indexInSong=-1;
         this.note;
         this.currNote;
-        this.noteNum;
+        this.noteNum=0;
         this.startTime=-1;
         this.shouldStart=false;
     }
@@ -83,7 +83,7 @@ export class TromboneHero extends Scene {
             this.note.pause();
             this.note=null;
             this.currNote=null;
-            this.noteNum=-1;
+            this.noteNum=0;
         }
     }
     startSong(songName){
@@ -115,7 +115,7 @@ export class TromboneHero extends Scene {
         this.key_triggered_button("Play A4", [ "6" ], ()=> this.playnote("ordinario/Tbn-ord-A3-ff-N-N.wav",6), undefined,() => this.stopnote("ordinario/Tbn-ord-A3-ff-N-N.wav"));
         this.key_triggered_button("Play B4", [ "7" ], ()=> this.playnote("ordinario/Tbn-ord-B3-ff-N-N.wav",7), undefined,() => this.stopnote("ordinario/Tbn-ord-B3-ff-N-N.wav"));
         this.key_triggered_button("Play C4", [ "8" ], ()=> this.playnote("ordinario/Tbn-ord-C4-ff-N-N.wav",8), undefined,() => this.stopnote("ordinario/Tbn-ord-C4-ff-N-N.wav"));
-        this.key_triggered_button("Start Song 1", [ "q" ], ()=> this.startSong(1));
+        this.key_triggered_button("Play Mary Had a Little Lamb", [ "q" ], ()=> this.startSong(1));
 
     }
     draw_cubes(t, context, program_state){
