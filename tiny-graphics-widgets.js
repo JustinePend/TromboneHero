@@ -28,16 +28,16 @@ const Canvas_Widget = widgets.Canvas_Widget =
                 Object.assign(options, initial_scenes[0].widget_options);
             Object.assign(this, defaults, options)
 
-            const rules = [".canvas-widget { width: 1080px; background: White; margin:auto }",
-                ".canvas-widget canvas { width: 1080px; height: 600px; margin-bottom:-3px }"];
+            const rules = [".canvas-widget { width: 1080px; background: White; margin:none;background:black }",
+                ".canvas-widget canvas { width: 1080px; height: 600px; margin-bottom:-3px; background:black }"];
 
             if (document.styleSheets.length == 0) document.head.appendChild(document.createElement("style"));
             for (const r of rules) document.styleSheets[document.styleSheets.length - 1].insertRule(r, 0)
 
             // Fill in the document elements:
             if (this.show_explanation) {
-                this.embedded_explanation_area = this.element.appendChild(document.createElement("div"));
-                this.embedded_explanation_area.className = "text-widget";
+                //this.embedded_explanation_area = this.element.appendChild(document.createElement("div"));
+                //this.embedded_explanation_area.className = "text-widget";
             }
 
             const canvas = this.element.appendChild(document.createElement("canvas"));
@@ -45,16 +45,17 @@ const Canvas_Widget = widgets.Canvas_Widget =
             if (this.make_controls) {
                 this.embedded_controls_area = this.element.appendChild(document.createElement("div"));
                 this.embedded_controls_area.className = "controls-widget";
+                this.embedded_controls_area.style="display:none";
             }
 
             if (this.make_code_nav) {
-                this.embedded_code_nav_area = this.element.appendChild(document.createElement("div"));
-                this.embedded_code_nav_area.className = "code-widget";
+                //this.embedded_code_nav_area = this.element.appendChild(document.createElement("div"));
+                //this.embedded_code_nav_area.className = "code-widget";
             }
 
             if (this.make_editor) {
-                this.embedded_editor_area = this.element.appendChild(document.createElement("div"));
-                this.embedded_editor_area.className = "editor-widget";
+                //this.embedded_editor_area = this.element.appendChild(document.createElement("div"));
+                //this.embedded_editor_area.className = "editor-widget";
             }
 
             if (!this.show_canvas)
@@ -94,8 +95,8 @@ const Controls_Widget = widgets.Controls_Widget =
         // bindings, live readouts of Scene data members, etc.
         constructor(element, scenes) {
             const rules = [".controls-widget * { font-family: monospace }",
-                ".controls-widget div { background: White }",
-                ".controls-widget table { border-collapse: collapse; display:block; overflow-x: auto; table-layout: fixed;}",
+                ".controls-widget div { background: White ;display:none1}",
+                ".controls-widget table { border-collapse: collapse; display:none; overflow-x: auto; table-layout: fixed;}",
                 ".controls-widget table.control-box { width: 1080px; border:1px; margin:0; max-height:380px; " +
                 "transition:.5s; overflow-y:scroll; background:white }",
                 ".controls-widget table.control-box:hover { max-height:500px }",

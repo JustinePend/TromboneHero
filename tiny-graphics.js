@@ -1327,13 +1327,26 @@ const Webgl_Manager = tiny.Webgl_Manager =
             // size in CSS, wait for style to re-flow, and then change the size again within canvas
             // attributes.  Both are needed because the attributes on a canvas ave a special effect
             // on buffers, separate from their style.
-            const [width, height] = dimensions;
-            this.canvas.style["width"] = width + "px";
-            this.canvas.style["height"] = height + "px";
-            Object.assign(this, {width, height});
-            Object.assign(this.canvas, {width, height});
-            // Build the canvas's matrix for converting -1 to 1 ranged coords (NCDS) into its own pixel coords:
-            this.context.viewport(0, 0, width, height);
+            // Retrieve the width of the screen
+            const screenWidth = window.innerWidth;
+
+            // Get the computed styles of the canvas container
+            const containerStyles = window.getComputedStyle(this.canvas.parentNode);
+
+            // Calculate the total width by subtracting the left and right padding or margin of the container
+            const containerWidth = screenWidth - parseFloat(containerStyles.paddingLeft) - parseFloat(containerStyles.paddingRight);
+
+            // Set the canvas size to the container width
+            this.canvas.style.width = containerWidth + "px";
+            this.canvas.style.height = "100%"; // Use 100% to ensure the canvas takes up the full height of the container
+
+            // Update the canvas attributes and size
+            this.width = containerWidth;
+            this.height = this.canvas.clientHeight;
+            Object.assign(this.canvas, { width: this.width, height: this.height });
+
+            // Set the viewport to match the canvas size
+            this.context.viewport(0, 0, this.width, this.height);
         }
 
         render(time = 0) {
