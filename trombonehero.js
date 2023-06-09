@@ -55,7 +55,7 @@ export class TromboneHero extends Scene {
             moon: new Material(new defs.Phong_Shader(), 
                 {ambient: 0.2, diffusivity: 0.7, specularity: 1, color: hex_color("#ffffff")}),
             brass: new Material(new defs.Phong_Shader(),
-                {ambient: .7, diffusivity: 0.5, specularity: 1, color: hex_color("#ebb23a")}),
+                {ambient: 0.7, diffusivity: 0.5, specularity: 1, color: hex_color("#ebb23a")}),
             // TODO:  Fill in as many additional material objects as needed in this key/value table.
             //        (Requirement 4)
         }
@@ -224,20 +224,71 @@ export class TromboneHero extends Scene {
         const rect = context.canvas.getBoundingClientRect();
 
         if(this.click) {
-            if(this.mouseY > rect.bottom * 7 / 8) {
+            if(this.mouseY > rect.bottom * 4.5 / 8) {
                 this.noteNum = 1;
                 if(this.noteNum == this.prevNoteNum) {
                     this.filename = "ordinario/Tbn-ord-C3-ff-N-T25d.wav";
                 } 
-            } else if (this.mouseY <= rect.bottom * 7/ 8  && this.mouseY > rect.bottom * 6 / 8){
+            } else if (this.mouseY <= rect.bottom * 4.5/ 8  && this.mouseY > rect.bottom * 4.25 / 8){
+                this.noteNum = 1.5;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-Cs3-ff-N-N.wav";
+                }
+             } else if (this.mouseY <= rect.bottom * 4.25/ 8  && this.mouseY > rect.bottom * 4 / 8){
                 this.noteNum = 2;
                 if(this.noteNum == this.prevNoteNum) {
                     this.filename = "ordinario/Tbn-ord-D3-ff-N-N.wav";
                 }
-            } else if (this.mouseY <= rect.bottom * 6/ 8  && this.mouseY > rect.bottom * 5 / 8){
+             } else if (this.mouseY <= rect.bottom * 4/ 8  && this.mouseY > rect.bottom * 3.75 / 8){
+                this.noteNum = 2.5;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-Ds3-ff-N-N.wav";
+                }
+             } else if (this.mouseY <= rect.bottom * 3.75/ 8  && this.mouseY > rect.bottom * 3.5 / 8){
                 this.noteNum = 3;
                 if(this.noteNum == this.prevNoteNum) {
                     this.filename = "ordinario/Tbn-ord-E3-ff-N-N.wav";
+                }
+            }
+            else if (this.mouseY <= rect.bottom * 3.5/ 8  && this.mouseY > rect.bottom * 3.0 / 8){
+                this.noteNum = 4;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-F3-ff-N-N.wav";
+                }
+            } else if (this.mouseY <= rect.bottom * 3.0/ 8  && this.mouseY > rect.bottom * 2.75 / 8){
+                this.noteNum = 4.5;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-Fs3-ff-N-N.wav";
+                }
+            } else if (this.mouseY <= rect.bottom * 2.75/ 8  && this.mouseY > rect.bottom * 2.5 / 8){
+                this.noteNum = 5;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-G3-ff-N-N.wav";
+                }
+            } else if (this.mouseY <= rect.bottom * 2.5/ 8  && this.mouseY > rect.bottom * 2.25 / 8){
+                this.noteNum = 5.5;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-Gs3-ff-T10u.wav";
+                }
+            } else if (this.mouseY <= rect.bottom * 2.25/ 8  && this.mouseY > rect.bottom * 2.0 / 8){
+                this.noteNum = 6;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-A3-ff-N-N.wav";
+                }
+            } else if (this.mouseY <= rect.bottom * 2.0/ 8  && this.mouseY > rect.bottom * 1.75 / 8){
+                this.noteNum = 6.5;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-As3-ff-N-N.wav";
+                }
+            } else if (this.mouseY <= rect.bottom * 1.75/ 8  && this.mouseY > rect.bottom * 1.5 / 8){
+                this.noteNum = 7;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-B3-ff-N-N.wav";
+                }
+            } else { // if (this.mouseY <= rect.bottom * 1.75/ 8  && this.mouseY > rect.bottom * 1.5 / 8){
+                this.noteNum = 8;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-C4-ff-N-N.wav";
                 }
             }
 
@@ -248,6 +299,7 @@ export class TromboneHero extends Scene {
             }
         } else {
             this.stopnote(this.filename)
+            this.filename="";
         }
         this.prevNoteNum = this.noteNum
 
@@ -277,6 +329,7 @@ export class TromboneHero extends Scene {
                                             .times(Mat4.scale(1, 1, 1));
     
         let light_position = vec4(0, 0, -9, 1);
+
         program_state.lights = [new Light(light_position, hex_color("#ffffff"), 10)];
          
         //MAIN BODY//
@@ -292,8 +345,17 @@ export class TromboneHero extends Scene {
 
         let tube1_transform = model_transform.times(Mat4.translation(0, -5, -7.5))
                                             .times(Mat4.scale(0.3, 0.3, 9));
-        this.shapes.tube.draw(context, program_state, tube1_transform, (this.click)? this.materials.brass : this.materials.test);
+        this.shapes.tube.draw(context, program_state, tube1_transform, this.materials.brass );
 
+        let tube_brace = model_transform.times(Mat4.translation(-2, -5, -3.5))
+                                        .times(Mat4.rotation(Math.PI/2, 0, 1, 0))
+                                        .times(Mat4.scale(0.25, 0.25, 4));
+        this.shapes.tube.draw(context, program_state, tube_brace, this.materials.brass);
+
+        let tube_brace2 = model_transform.times(Mat4.translation(0, -2.5, -7.5))
+                                        .times(Mat4.rotation(Math.PI/2, 1, 0, 0))
+                                        .times(Mat4.scale(0.25, 0.25, 5));
+        this.shapes.tube.draw(context, program_state, tube_brace2, this.materials.brass);
         //INNER TUBES//
 
         let inner_tube2_transform = model_transform.times(Mat4.translation(0, -5, 4))
