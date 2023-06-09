@@ -175,21 +175,16 @@ export class TromboneHero extends Scene {
         }
         // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 3 and 4)
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
-        let model_transform = Mat4.identity();
+        let model_transform = Mat4.identity().times(Mat4.rotation(Math.PI / 4, 0, 1, 0))
+                                            .times(Mat4.scale(0.75, 0.75, 0.75));
+    
         
-        //let light_position = vec4(1,1,1,1);
-        //program_state.lights = [new Light(light_position, color(1,1,1,1))];
-
-        /* sun */
-        let sun_scaling_r = (Math.sin(Math.PI * t / 4) + 2);
-        let sun_scaling_c = Math.sin(Math.PI * t / 4);
-
+     
         let light_position = vec4(0, 0, 2, 1);
         program_state.lights = [new Light(light_position, hex_color("#ffffff"), 10)];
      
          
         //MAIN BODY//
-        let light_test = model_transform.times(Mat4.translation(0, 0, 2));
         //this.shapes.moon.draw(context, program_state, light_test, this.materials.test);
 
         this.shapes.trombone_bell.draw(context, program_state, model_transform, this.materials.brass);
