@@ -66,17 +66,26 @@ export class TromboneHero extends Scene {
         this.indexInSong=-1;
         this.note;
         this.currNote;
+        this.filename = "";
         this.noteNum=0;
+        this.prevNoteNum = 0;
+        
         this.startTime=-1;
         this.shouldStart=false;
         this.position = 0;
         this.setpoint = 0;
         this.error = 0;
         this.lastNote = 1;
+        this.initialize = true;
+
+        this.mouseX = 0;
+        this.mouseY = 0;
 
         this.pitch = 0;
         this.pitcherror = 0;
         this.pitchsetpoint = 0;
+
+        this.click = false;
     }
     playnote(path, num){
         if(this.note==null){
@@ -127,7 +136,7 @@ export class TromboneHero extends Scene {
         this.key_triggered_button("Play Mary Had a Little Lamb", [ "q" ], ()=> this.startSong(1));
 
     }
-    draw_cubes(t, context, program_state){
+    draw_cubes(t, context, program_state){1
         let time = t-this.startTime;
         for(let i=0;i<this.currSong.length;i++){
 
@@ -177,7 +186,45 @@ export class TromboneHero extends Scene {
             let blended_cam = attached_cam.map((x,i) => Vector.from(program_state.camera_inverse[i]).mix(x, blending_factor));
             program_state.set_camera(blended_cam);
         }
-        // TODO:  Fill in matrix operations and drawing code to draw the solar system scene (Requirements 3 and 4)
+
+
+
+        const rect = context.canvas.getBoundingClientRect();
+
+        if(this.click) {
+            if(this.mouseY > rect.bottom * 7 / 8) {
+                this.noteNum = 1;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-C3-ff-N-T25d.wav";
+                } 
+            } else if (this.mouseY <= rect.bottom * 7/ 8  && this.mouseY > rect.bottom * 6 / 8){
+                this.noteNum = 2;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-D3-ff-N-N.wav";
+                }
+            } else if (this.mouseY <= rect.bottom * 6/ 8  && this.mouseY > rect.bottom * 5 / 8){
+                this.noteNum = 3;
+                if(this.noteNum == this.prevNoteNum) {
+                    this.filename = "ordinario/Tbn-ord-E3-ff-N-N.wav";
+                }
+            }
+
+            if(this.noteNum == this.prevNoteNum) {
+                this.playnote(this.filename, this.noteNum);
+            } else {
+                this.stopnote(this.filename);
+            }
+        } else {
+            this.stopnote(this.filename)
+        }
+        this.prevNoteNum = this.noteNum
+
+
+
+
+
+
+
         const t = program_state.animation_time / 1000, dt = program_state.animation_delta_time / 1000;
 
         this.lastNote = (this.noteNum != 0)? this.noteNum : this.lastNote;
@@ -197,11 +244,8 @@ export class TromboneHero extends Scene {
                                             .times(Mat4.rotation(this.pitch, 1, 0.7, 1))
                                             .times(Mat4.scale(1, 1, 1));
     
-        
-     
         let light_position = vec4(0, 0, -9, 1);
         program_state.lights = [new Light(light_position, hex_color("#ffffff"), 10)];
-     
          
         //MAIN BODY//
         //this.shapes.moon.draw(context, program_state, light_test, this.materials.test);
@@ -216,7 +260,7 @@ export class TromboneHero extends Scene {
 
         let tube1_transform = model_transform.times(Mat4.translation(0, -5, -7.5))
                                             .times(Mat4.scale(0.3, 0.3, 9));
-        this.shapes.tube.draw(context, program_state, tube1_transform, this.materials.brass);
+        this.shapes.tube.draw(context, program_state, tube1_transform, (this.click)? this.materials.brass : this.materials.test);
 
         //INNER TUBES//
 
@@ -256,6 +300,31 @@ export class TromboneHero extends Scene {
         if(this.startTime!=-1){
             this.draw_cubes(t, context, program_state);
         }
+        if(this.initialize) {
+            this.initialize = false;
+
+            context.context.canvas.addEventListener("mouseup", e => {
+                this.click = false;
+                
+            });
+
+            context.context.canvas.addEventListener("mousedown", e => {
+                const rect = context.canvas.getBoundingClientRect();
+        	    this.mouseX = e.clientX - rect.left;
+        	    this.mouseY = e.clientY - rect.top;
+                this.click = true;
+
+            });
+            context.context.canvas.addEventListener("mousemove", e => {
+                const rect = context.canvas.getBoundingClientRect();
+        	    this.mouseX = e.clientX - rect.left;
+        	    this.mouseY = e.clientY - rect.top;
+            });
+            // canvas.addEventListener("mouseout", e => {
+            //     if (!this.mouse.anchor) this.mouse.from_center.scale_by(0)
+            // });
+        }
+
         let line_trans= Mat4.identity();
         line_trans=line_trans.times(Mat4.translation(12,0,.1)).times(Mat4.scale(0.3, 20, .3));
         this.shapes.finishLine.draw(context,program_state,line_trans,this.materials.test.override({color: color(0,1,1,1)}));
@@ -269,6 +338,10 @@ export class TromboneHero extends Scene {
         this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,30,0)),this.materials.test.override({color: color(0,1,1,1)}));
         this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,40,0)),this.materials.test.override({color: color(0,1,1,1)}));
         this.shapes.guideLines.draw(context,program_state,guide_trans.times(Mat4.translation(0,50,0)),this.materials.test.override({color: color(0,1,1,1)}));
+
+        this.shapes.circle.draw(context, program_state, Mat4.identity().times(Mat4.translation(11.9, 7 - this.mouseY / 40, 1))
+                                                                        .times(Mat4.scale(0.7, 0.7, 0.7))
+                                                                        , this.materials.test.override({color: color(0,0,1,1)}));
     }  
 }
 
