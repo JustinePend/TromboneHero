@@ -68,6 +68,10 @@ export class TromboneHero extends Scene {
         this.noteNum=0;
         this.startTime=-1;
         this.shouldStart=false;
+        this.position = 0;
+        this.setpoint = 0;
+        this.error = 0;
+        this.lastNote = 1;
     }
     playnote(path, num){
         if(this.note==null){
@@ -213,21 +217,27 @@ export class TromboneHero extends Scene {
                                                      .times(Mat4.translation(-3.9, 5, 4));
         this.shapes.mouthpiece.draw(context, program_state, mouthpiece_transform, this.materials.test);
 
+        //* 5 * Math.sin(Math.PI * t / 4) + 5;
+
+        this.lastNote = (this.noteNum != 0)? this.noteNum : this.lastNote;
+        this.setpoint = (this.lastNote - 1)* 1.9;
+        this.error = this.setpoint - this.position;
+        
+        this.position = this.position + 10.0 * this.error * dt;
 
 
-        let translate = 5 * Math.sin(Math.PI * t / 4) + 5;
-        //MOVING//
-        let tube2_transform = model_transform.times(Mat4.translation(0, -5, 4 + translate))
+        //MOVING//2
+        let tube2_transform = model_transform.times(Mat4.translation(0, -5, 4 + this.position))
                                             .times(Mat4.scale(0.24, 0.24, 14.5));
         this.shapes.tube.draw(context, program_state, tube2_transform, this.materials.brass);
 
         
         let curved_tube2_transform = model_transform.times(Mat4.rotation(Math.PI, 1, 0, 0))
-                                            .times(Mat4.translation(-1.95,5,-11 - translate))
+                                            .times(Mat4.translation(-1.95,5,-11 - this.position))
                                             .times(Mat4.scale(0.55, 0.55, 0.6));
         this.shapes.curved_tube.draw(context, program_state, curved_tube2_transform, this.materials.brass);
 
-        let tube3_transform = model_transform.times(Mat4.translation(-3.9, -5, 4 + translate))
+        let tube3_transform = model_transform.times(Mat4.translation(-3.9, -5, 4 + this.position))
                                             .times(Mat4.scale(0.24, 0.24, 14.5));
         this.shapes.tube.draw(context, program_state, tube3_transform, this.materials.brass);
 
